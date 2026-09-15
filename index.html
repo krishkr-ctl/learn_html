@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn HTML &amp; CSS — A Beginner's Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============ TOKENS ============ */
+:root{
+  --paper:#F7F5EF;
+  --panel:#FFFFFF;
+  --ink:#20232A;
+  --ink-soft:#565B66;
+  --pine:#1F5B4F;
+  --pine-dark:#153F37;
+  --amber:#D98A2B;
+  --border:#DEDACC;
+  --code-bg:#1B1F1D;
+  --code-text:#E7E4DA;
+  --tag:#6FB3E0;
+  --attr:#D9A65C;
+  --str:#8FCB93;
+  --cmt:#7A8177;
+  --radius:10px;
+  --maxw:920px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  line-height:1.6;
+  font-size:16px;
+}
+h1,h2,h3{
+  font-family:'Space Grotesk',sans-serif;
+  color:var(--pine-dark);
+  line-height:1.2;
+  margin:0 0 .4em;
+}
+p{margin:0 0 1em;color:var(--ink);}
+a{color:var(--pine);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;}
+a:hover{text-decoration-color:currentColor;}
+code, pre{font-family:'JetBrains Mono',monospace;}
+
+/* ============ LAYOUT SHELL ============ */
+.shell{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  min-height:100vh;
+}
+
+/* ---- Sidebar ---- */
+.sidebar{
+  border-right:1px solid var(--border);
+  padding:28px 20px 40px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  background:var(--paper);
+}
+.brand{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  margin-bottom:6px;
+}
+.brand .mark{
+  font-family:'JetBrains Mono',monospace;
+  background:var(--pine-dark);
+  color:#fff;
+  padding:2px 7px;
+  border-radius:5px;
+  font-size:13px;
+}
+.brand h1{font-size:19px;margin:0;}
+.tagline{font-size:13px;color:var(--ink-soft);margin-bottom:26px;}
+
+.navgroup{margin-bottom:22px;}
+.navgroup h4{
+  font-size:11px;
+  letter-spacing:.04em;
+  color:var(--ink-soft);
+  margin:0 0 8px;
+  font-weight:600;
+  font-family:'Inter',sans-serif;
+}
+.navgroup ul{list-style:none;margin:0;padding:0;}
+.navgroup li a{
+  display:block;
+  padding:6px 8px;
+  border-radius:6px;
+  color:var(--ink);
+  text-decoration:none;
+  font-size:14px;
+  border-left:2px solid transparent;
+}
+.navgroup li a:hover{background:#EFEBDD;}
+.navgroup li a.active{
+  color:var(--pine-dark);
+  border-left:2px solid var(--amber);
+  background:#EFEBDD;
+  font-weight:600;
+}
+
+.menu-toggle{display:none;}
+
+/* ---- Main content ---- */
+main{padding:48px 32px 120px;}
+.wrap{max-width:var(--maxw);margin:0 auto;}
+
+.hero{margin-bottom:64px;}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--amber);
+  font-size:14px;
+  margin-bottom:10px;
+}
+.hero h1{font-size:44px;max-width:14ch;}
+.hero p.lead{font-size:18px;color:var(--ink-soft);max-width:56ch;margin-top:14px;}
+.hero .start-btn{
+  display:inline-block;
+  margin-top:22px;
+  background:var(--pine-dark);
+  color:#fff;
+  padding:11px 20px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:15px;
+}
+.hero .start-btn:hover{background:var(--pine);}
+
+.part-heading{
+  margin:70px 0 30px;
+  padding-bottom:14px;
+  border-bottom:2px solid var(--ink);
+}
+.part-heading span{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--amber);
+  font-size:14px;
+  display:block;
+  margin-bottom:4px;
+}
+.part-heading h2{font-size:28px;}
+
+.topic{
+  padding:34px 0;
+  border-bottom:1px solid var(--border);
+  scroll-margin-top:20px;
+}
+.topic-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;}
+.topic-num{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--border);
+  font-size:26px;
+  font-weight:600;
+}
+.topic h2{font-size:23px;margin-bottom:0;}
+.topic p{color:var(--ink-soft);max-width:70ch;}
+.note{
+  font-size:14px;
+  background:#FBF0DC;
+  border:1px solid #E9D6A6;
+  color:#5B4A1E;
+  padding:10px 14px;
+  border-radius:8px;
+  margin:14px 0;
+}
+.note strong{color:#463813;}
+
+/* ---- code / output demo panes ---- */
+.demo{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:18px;
+}
+@media (max-width:760px){
+  .demo{grid-template-columns:1fr;}
+}
+.pane{
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--panel);
+}
+.pane-bar{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 12px;
+  background:#EDEAE0;
+  border-bottom:1px solid var(--border);
+}
+.code-pane .pane-bar{background:#151816;border-bottom:1px solid #2A2E2B;}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#C9C4B4;}
+.code-pane .dot{background:#3A3E3A;}
+.filename{
+  margin-left:6px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:#8B9089;
+}
+.browser-bar .dot.red{background:#E4685D;}
+.browser-bar .dot.yellow{background:#EDC44E;}
+.browser-bar .dot.green{background:#61C454;}
+.url-bar{
+  margin-left:8px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:5px;
+  font-size:11px;
+  color:var(--ink-soft);
+  padding:2px 10px;
+  font-family:'JetBrains Mono',monospace;
+}
+.code-pane pre{
+  margin:0;
+  padding:16px;
+  background:var(--code-bg);
+  color:var(--code-text);
+  font-size:13px;
+  overflow-x:auto;
+  line-height:1.7;
+}
+.tg{color:var(--tag);}
+.at{color:var(--attr);}
+.sv{color:var(--str);}
+.cm{color:var(--cmt);font-style:italic;}
+.output-content{
+  padding:18px;
+  font-size:15px;
+  min-height:60px;
+  overflow:auto;
+}
+.output-content img{max-width:100%;border-radius:4px;}
+
+/* elements used INSIDE rendered output demos, namespaced so they don't leak into page styling */
+.output-content .demo-box{background:var(--amber);color:#fff;padding:14px;border-radius:6px;}
+.output-content table{border-collapse:collapse;width:100%;font-size:14px;}
+.output-content table, .output-content th, .output-content td{border:1px solid #C9C4B4;}
+.output-content th, .output-content td{padding:6px 10px;text-align:left;}
+.output-content th{background:#EFEBDD;}
+.output-content .btn-demo{background:var(--pine-dark);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-size:14px;cursor:pointer;}
+.output-content input, .output-content select, .output-content textarea{
+  font-family:'Inter',sans-serif;padding:6px 8px;border:1px solid #C9C4B4;border-radius:5px;font-size:14px;
+}
+.output-content label{font-size:13px;color:var(--ink-soft);display:block;margin-bottom:3px;}
+.output-content .flex-demo{display:flex;gap:10px;}
+.output-content .flex-demo div{background:var(--pine);color:#fff;padding:14px;border-radius:6px;flex:1;text-align:center;}
+.output-content .grid-demo{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.output-content .grid-demo div{background:#EFC988;padding:12px;text-align:center;border-radius:5px;font-size:13px;}
+.output-content .box-model-demo{background:#D9C79A;padding:20px;display:inline-block;}
+.output-content .box-model-demo .inner{background:var(--pine);color:#fff;padding:14px;border:4px solid var(--pine-dark);}
+
+.practice{
+  margin-top:70px;
+  background:var(--pine-dark);
+  color:#fff;
+  padding:40px 36px;
+  border-radius:16px;
+}
+.practice h2{color:#fff;font-size:26px;}
+.practice p{color:#DCE6E2;}
+.practice ol{color:#DCE6E2;padding-left:20px;}
+.practice ol li{margin-bottom:8px;}
+
+footer{
+  text-align:center;
+  color:var(--ink-soft);
+  font-size:13px;
+  padding:40px 0 10px;
+}
+
+/* ---- responsive ---- */
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{
+    position:relative;
+    height:auto;
+    display:none;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+  }
+  .sidebar.open{display:block;}
+  .menu-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    position:sticky;
+    top:0;
+    z-index:5;
+    width:100%;
+    background:var(--paper);
+    border-bottom:1px solid var(--border);
+    padding:14px 20px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    cursor:pointer;
+  }
+  main{padding:24px 18px 100px;}
+  .hero h1{font-size:32px;}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <button class="menu-toggle" id="menuToggle">☰ &nbsp;Course Menu</button>
+
+  <nav class="sidebar" id="sidebar">
+    <div class="brand"><span class="mark">&lt;/&gt;</span><h1>Learn HTML &amp; CSS</h1></div>
+    <div class="tagline">A hands-on workshop for absolute beginners</div>
+
+    <div class="navgroup">
+      <h4>Getting started</h4>
+      <ul>
+        <li><a href="#intro">What is HTML?</a></li>
+        <li><a href="#structure">Document structure</a></li>
+      </ul>
+    </div>
+
+    <div class="navgroup">
+      <h4>HTML basics</h4>
+      <ul>
+        <li><a href="#headings">Headings &amp; paragraphs</a></li>
+        <li><a href="#formatting">Text formatting</a></li>
+        <li><a href="#links">Links</a></li>
+        <li><a href="#images">Images</a></li>
+        <li><a href="#lists">Lists</a></li>
+        <li><a href="#tables">Tables</a></li>
+        <li><a href="#forms">Forms</a></li>
+        <li><a href="#semantic">Divs &amp; semantic tags</a></li>
+        <li><a href="#comments">Attributes &amp; comments</a></li>
+      </ul>
+    </div>
+
+    <div class="navgroup">
+      <h4>CSS basics</h4>
+      <ul>
+        <li><a href="#css-intro">Adding CSS</a></li>
+        <li><a href="#selectors">Selectors</a></li>
+        <li><a href="#colors">Colors &amp; backgrounds</a></li>
+        <li><a href="#boxmodel">The box model</a></li>
+        <li><a href="#text">Styling text</a></li>
+        <li><a href="#flexbox">Flexbox</a></li>
+        <li><a href="#grid">Grid</a></li>
+        <li><a href="#responsive">Responsive design</a></li>
+      </ul>
+    </div>
+
+    <div class="navgroup">
+      <h4>Wrap up</h4>
+      <ul>
+        <li><a href="#practice">Practice project</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="wrap">
+
+      <section class="hero" id="intro">
+        <div class="kicker">// beginner-friendly · no install needed</div>
+        <h1>Build your first web page, tag by tag.</h1>
+        <p class="lead">This page teaches HTML and CSS the way you'll actually use them: a short explanation, the exact code, and the live result sitting right next to it. Read top to bottom, or jump to any topic in the menu.</p>
+        <a class="start-btn" href="#structure">Start learning ↓</a>
+
+        <div class="note" style="margin-top:28px;">
+          <strong>What is HTML, really?</strong> HTML (HyperText Markup Language) describes the <em>content and structure</em> of a page — this is a heading, this is a paragraph, this is a picture. CSS (Cascading Style Sheets) describes how that content <em>looks</em> — colors, spacing, layout. Together they build almost every web page you've ever visited.
+        </div>
+      </section>
+
+      <!-- ===================== PART 1: HTML ===================== -->
+      <div class="part-heading">
+        <span>Part one</span>
+        <h2>HTML — structuring content</h2>
+      </div>
+
+      <section class="topic" id="structure">
+        <div class="topic-head"><span class="topic-num">01</span><h2>Document structure</h2></div>
+        <p>Every HTML file starts with the same skeleton. <code>&lt;!DOCTYPE html&gt;</code> tells the browser which version of HTML you're using. Everything visible lives inside <code>&lt;body&gt;</code>, while page information like the title lives in <code>&lt;head&gt;</code>.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">!DOCTYPE html</span>&gt;
+&lt;<span class="tg">html</span>&gt;
+  &lt;<span class="tg">head</span>&gt;
+    &lt;<span class="tg">title</span>&gt;My First Page&lt;/<span class="tg">title</span>&gt;
+  &lt;/<span class="tg">head</span>&gt;
+  &lt;<span class="tg">body</span>&gt;
+    &lt;<span class="tg">h1</span>&gt;Hello, world!&lt;/<span class="tg">h1</span>&gt;
+  &lt;/<span class="tg">body</span>&gt;
+&lt;/<span class="tg">html</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">My First Page</span></div>
+            <div class="output-content"><h1 style="margin:0;font-size:26px;">Hello, world!</h1></div>
+          </div>
+        </div>
+        <p style="margin-top:14px;">Notice the pattern: most tags come in pairs, an <strong>opening tag</strong> <code>&lt;h1&gt;</code> and a <strong>closing tag</strong> <code>&lt;/h1&gt;</code>, wrapping the content between them.</p>
+      </section>
+
+      <section class="topic" id="headings">
+        <div class="topic-head"><span class="topic-num">02</span><h2>Headings &amp; paragraphs</h2></div>
+        <p>Headings range from <code>&lt;h1&gt;</code> (most important, use once per page) down to <code>&lt;h6&gt;</code> (least important). Regular text goes inside a <code>&lt;p&gt;</code> paragraph tag.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">h1</span>&gt;Main Title&lt;/<span class="tg">h1</span>&gt;
+&lt;<span class="tg">h2</span>&gt;A Subheading&lt;/<span class="tg">h2</span>&gt;
+&lt;<span class="tg">p</span>&gt;This is a normal
+  paragraph of text.&lt;/<span class="tg">p</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <h1 style="font-size:22px;margin:0 0 6px;">Main Title</h1>
+              <h2 style="font-size:17px;margin:0 0 8px;">A Subheading</h2>
+              <p style="margin:0;">This is a normal paragraph of text.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="formatting">
+        <div class="topic-head"><span class="topic-num">03</span><h2>Text formatting</h2></div>
+        <p>A handful of tags change how text reads: <code>&lt;strong&gt;</code> for importance (bold), <code>&lt;em&gt;</code> for emphasis (italic), <code>&lt;br&gt;</code> for a line break, and <code>&lt;hr&gt;</code> for a horizontal divider.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">p</span>&gt;
+  &lt;<span class="tg">strong</span>&gt;Warning:&lt;/<span class="tg">strong</span>&gt;
+  don't forget to save.&lt;<span class="tg">br</span>&gt;
+  &lt;<span class="tg">em</span>&gt;Seriously.&lt;/<span class="tg">em</span>&gt;
+&lt;/<span class="tg">p</span>&gt;
+&lt;<span class="tg">hr</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <p style="margin:0;"><strong>Warning:</strong> don't forget to save.<br><em>Seriously.</em></p>
+              <hr style="margin-top:10px;border:none;border-top:1px solid #C9C4B4;">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="links">
+        <div class="topic-head"><span class="topic-num">04</span><h2>Links</h2></div>
+        <p>The anchor tag <code>&lt;a&gt;</code> creates a clickable link. The <code>href</code> attribute holds the destination address, and <code>target="_blank"</code> opens it in a new tab.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">a</span> <span class="at">href</span>=<span class="sv">"https://example.com"</span>
+   <span class="at">target</span>=<span class="sv">"_blank"</span>&gt;
+  Visit Example
+&lt;/<span class="tg">a</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><a href="#">Visit Example</a></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="images">
+        <div class="topic-head"><span class="topic-num">05</span><h2>Images</h2></div>
+        <p>The <code>&lt;img&gt;</code> tag has no closing tag — it's self-closing. It needs <code>src</code> (where the image file is) and should always have <code>alt</code> text describing the image, for accessibility and for when the image fails to load.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">img</span>
+  <span class="at">src</span>=<span class="sv">"mountain.jpg"</span>
+  <span class="at">alt</span>=<span class="sv">"Sunrise over a mountain range"</span>
+  <span class="at">width</span>=<span class="sv">"260"</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=60" alt="Sunrise over a mountain range" width="260">
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:14px;"><code>src</code> can point to a file in your own project folder (like <code>images/mountain.jpg</code>) or to an address on the web, as shown above.</p>
+      </section>
+
+      <section class="topic" id="lists">
+        <div class="topic-head"><span class="topic-num">06</span><h2>Lists</h2></div>
+        <p>Use <code>&lt;ul&gt;</code> for a bulleted (unordered) list, or <code>&lt;ol&gt;</code> for a numbered (ordered) list. Each item goes inside an <code>&lt;li&gt;</code> tag.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">ul</span>&gt;
+  &lt;<span class="tg">li</span>&gt;Flour&lt;/<span class="tg">li</span>&gt;
+  &lt;<span class="tg">li</span>&gt;Sugar&lt;/<span class="tg">li</span>&gt;
+&lt;/<span class="tg">ul</span>&gt;
+
+&lt;<span class="tg">ol</span>&gt;
+  &lt;<span class="tg">li</span>&gt;Preheat oven&lt;/<span class="tg">li</span>&gt;
+  &lt;<span class="tg">li</span>&gt;Mix batter&lt;/<span class="tg">li</span>&gt;
+&lt;/<span class="tg">ol</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <ul style="margin:0 0 10px;padding-left:20px;"><li>Flour</li><li>Sugar</li></ul>
+              <ol style="margin:0;padding-left:20px;"><li>Preheat oven</li><li>Mix batter</li></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="tables">
+        <div class="topic-head"><span class="topic-num">07</span><h2>Tables</h2></div>
+        <p><code>&lt;table&gt;</code> holds rows (<code>&lt;tr&gt;</code>), which hold cells: <code>&lt;th&gt;</code> for a header cell, <code>&lt;td&gt;</code> for a regular data cell.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">table</span>&gt;
+  &lt;<span class="tg">tr</span>&gt;
+    &lt;<span class="tg">th</span>&gt;Name&lt;/<span class="tg">th</span>&gt;
+    &lt;<span class="tg">th</span>&gt;Score&lt;/<span class="tg">th</span>&gt;
+  &lt;/<span class="tg">tr</span>&gt;
+  &lt;<span class="tg">tr</span>&gt;
+    &lt;<span class="tg">td</span>&gt;Amina&lt;/<span class="tg">td</span>&gt;
+    &lt;<span class="tg">td</span>&gt;92&lt;/<span class="tg">td</span>&gt;
+  &lt;/<span class="tg">tr</span>&gt;
+&lt;/<span class="tg">table</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <table><tr><th>Name</th><th>Score</th></tr><tr><td>Amina</td><td>92</td></tr></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="forms">
+        <div class="topic-head"><span class="topic-num">08</span><h2>Forms</h2></div>
+        <p>Forms collect input. A <code>&lt;form&gt;</code> wraps fields like <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, and a submit <code>&lt;button&gt;</code>. Always pair an input with a <code>&lt;label&gt;</code> so screen readers and click targets work properly.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">form</span>&gt;
+  &lt;<span class="tg">label</span>&gt;Your name&lt;/<span class="tg">label</span>&gt;
+  &lt;<span class="tg">input</span> <span class="at">type</span>=<span class="sv">"text"</span>
+    <span class="at">placeholder</span>=<span class="sv">"Jane Doe"</span>&gt;
+
+  &lt;<span class="tg">label</span>&gt;Favorite color&lt;/<span class="tg">label</span>&gt;
+  &lt;<span class="tg">select</span>&gt;
+    &lt;<span class="tg">option</span>&gt;Blue&lt;/<span class="tg">option</span>&gt;
+    &lt;<span class="tg">option</span>&gt;Green&lt;/<span class="tg">option</span>&gt;
+  &lt;/<span class="tg">select</span>&gt;
+
+  &lt;<span class="tg">button</span>&gt;Submit&lt;/<span class="tg">button</span>&gt;
+&lt;/<span class="tg">form</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <label>Your name</label>
+              <input type="text" placeholder="Jane Doe" style="margin-bottom:10px;width:100%;">
+              <label>Favorite color</label>
+              <select style="margin-bottom:12px;width:100%;"><option>Blue</option><option>Green</option></select>
+              <button class="btn-demo" type="button">Submit</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="semantic">
+        <div class="topic-head"><span class="topic-num">09</span><h2>Divs &amp; semantic tags</h2></div>
+        <p><code>&lt;div&gt;</code> is a plain, meaning-free box used to group things for styling. Modern HTML also offers <strong>semantic</strong> tags that describe the role of a section — <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, and <code>&lt;footer&gt;</code> — which help browsers, search engines, and screen readers understand your page.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code>&lt;<span class="tg">header</span>&gt;
+  &lt;<span class="tg">h1</span>&gt;My Blog&lt;/<span class="tg">h1</span>&gt;
+&lt;/<span class="tg">header</span>&gt;
+&lt;<span class="tg">main</span>&gt;
+  &lt;<span class="tg">article</span>&gt;
+    &lt;<span class="tg">h2</span>&gt;A Post&lt;/<span class="tg">h2</span>&gt;
+    &lt;<span class="tg">p</span>&gt;Some text.&lt;/<span class="tg">p</span>&gt;
+  &lt;/<span class="tg">article</span>&gt;
+&lt;/<span class="tg">main</span>&gt;
+&lt;<span class="tg">footer</span>&gt;© 2026&lt;/<span class="tg">footer</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <div style="border:1px dashed #C9C4B4;padding:8px;margin-bottom:6px;"><strong style="font-size:15px;">My Blog</strong></div>
+              <div style="border:1px dashed #C9C4B4;padding:8px;margin-bottom:6px;">
+                <div style="border:1px dashed #A9C7B8;padding:6px;">
+                  <div style="font-weight:600;">A Post</div>
+                  <div style="font-size:13px;">Some text.</div>
+                </div>
+              </div>
+              <div style="border:1px dashed #C9C4B4;padding:8px;font-size:13px;">© 2026</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="comments">
+        <div class="topic-head"><span class="topic-num">10</span><h2>Attributes &amp; comments</h2></div>
+        <p>An <strong>attribute</strong> adds extra information to a tag, written as <code>name="value"</code> inside the opening tag — you've already seen <code>href</code>, <code>src</code>, and <code>alt</code>. A <strong>comment</strong> is a note in your code that the browser ignores; it's written <code>&lt;!-- like this --&gt;</code>.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code><span class="cm">&lt;!-- This is the top banner --&gt;</span>
+&lt;<span class="tg">div</span> <span class="at">id</span>=<span class="sv">"banner"</span> <span class="at">class</span>=<span class="sv">"highlight"</span>&gt;
+  Sale ends tonight!
+&lt;/<span class="tg">div</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><div class="demo-box">Sale ends tonight!</div></div>
+          </div>
+        </div>
+        <p style="margin-top:14px;"><code>id</code> names one unique element; <code>class</code> can label many elements that should share a style — both become hooks for CSS, which is exactly what's next.</p>
+      </section>
+
+      <!-- ===================== PART 2: CSS ===================== -->
+      <div class="part-heading">
+        <span>Part two</span>
+        <h2>CSS — styling that content</h2>
+      </div>
+
+      <section class="topic" id="css-intro">
+        <div class="topic-head"><span class="topic-num">11</span><h2>Three ways to add CSS</h2></div>
+        <p>You can write CSS <strong>inline</strong> on one element, <strong>internally</strong> in a <code>&lt;style&gt;</code> block in the head, or <strong>externally</strong> in a separate <code>.css</code> file linked with <code>&lt;link&gt;</code>. External files are the standard choice for real projects, because the styling stays separate from the content.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">index.html</span></div>
+            <pre><code><span class="cm">&lt;!-- 1. inline --&gt;</span>
+&lt;<span class="tg">p</span> <span class="at">style</span>=<span class="sv">"color:teal"</span>&gt;Hi&lt;/<span class="tg">p</span>&gt;
+
+<span class="cm">&lt;!-- 2. internal --&gt;</span>
+&lt;<span class="tg">style</span>&gt;
+  p { color: teal; }
+&lt;/<span class="tg">style</span>&gt;
+
+<span class="cm">&lt;!-- 3. external --&gt;</span>
+&lt;<span class="tg">link</span> <span class="at">rel</span>=<span class="sv">"stylesheet"</span>
+  <span class="at">href</span>=<span class="sv">"style.css"</span>&gt;</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><p style="color:teal;margin:0;">Hi</p>
+              <p style="margin-top:10px;color:var(--ink-soft);font-size:13px;">All three methods can produce the same teal text — they just differ in where the rule lives.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="selectors">
+        <div class="topic-head"><span class="topic-num">12</span><h2>Selectors</h2></div>
+        <p>A CSS rule is a <strong>selector</strong> plus a set of <strong>declarations</strong>. Target every element of a type with its tag name, a specific one with <code>#id</code>, or a group with <code>.class</code>.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>p {
+  color: <span class="sv">#20232A</span>;
+}
+
+.highlight {
+  background: <span class="sv">gold</span>;
+}
+
+#banner {
+  font-weight: <span class="sv">bold</span>;
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <p style="margin:0 0 8px;">Every <code>p</code> gets this color.</p>
+              <span style="background:gold;padding:2px 6px;border-radius:3px;">.highlight class</span>
+              <p style="font-weight:bold;margin-top:8px;">#banner id (bold)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="colors">
+        <div class="topic-head"><span class="topic-num">13</span><h2>Colors &amp; backgrounds</h2></div>
+        <p>Colors can be named (<code>teal</code>), hex codes (<code>#1F5B4F</code>), or <code>rgb()</code> values. <code>background-color</code> fills the element, <code>color</code> sets the text.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>.card {
+  background-color: <span class="sv">#1F5B4F</span>;
+  color: <span class="sv">white</span>;
+  border-radius: <span class="sv">8px</span>;
+  padding: <span class="sv">16px</span>;
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><div style="background-color:#1F5B4F;color:#fff;border-radius:8px;padding:16px;">A styled card</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="boxmodel">
+        <div class="topic-head"><span class="topic-num">14</span><h2>The box model</h2></div>
+        <p>Every element is a rectangular box made of four layers, from the inside out: <strong>content</strong>, <strong>padding</strong> (space inside the border), <strong>border</strong>, and <strong>margin</strong> (space outside the border, pushing other elements away).</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>.box {
+  width: <span class="sv">160px</span>;
+  padding: <span class="sv">14px</span>;
+  border: <span class="sv">4px solid #1F5B4F</span>;
+  margin: <span class="sv">20px</span>;
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content">
+              <div class="box-model-demo"><div class="inner">content</div></div>
+              <p style="font-size:12px;color:var(--ink-soft);margin-top:8px;">tan = margin, green border = the border, white gap = padding</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="text">
+        <div class="topic-head"><span class="topic-num">15</span><h2>Styling text</h2></div>
+        <p>Common text properties: <code>font-family</code>, <code>font-size</code>, <code>font-weight</code>, and <code>text-align</code>.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>h2 {
+  font-family: <span class="sv">Georgia, serif</span>;
+  font-size: <span class="sv">24px</span>;
+  font-weight: <span class="sv">700</span>;
+  text-align: <span class="sv">center</span>;
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><h2 style="font-family:Georgia,serif;font-size:24px;font-weight:700;text-align:center;color:var(--ink);margin:0;">Centered Heading</h2></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="flexbox">
+        <div class="topic-head"><span class="topic-num">16</span><h2>Flexbox</h2></div>
+        <p><code>display: flex</code> lines up a container's children in a row (or column) and makes spacing between them easy — perfect for navigation bars and card rows.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>.row {
+  display: <span class="sv">flex</span>;
+  gap: <span class="sv">10px</span>;
+}
+.row div {
+  flex: <span class="sv">1</span>;
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><div class="flex-demo"><div>1</div><div>2</div><div>3</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="grid">
+        <div class="topic-head"><span class="topic-num">17</span><h2>Grid</h2></div>
+        <p><code>display: grid</code> lays children into rows and columns at once. <code>grid-template-columns</code> defines how many columns and how wide each is.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>.gallery {
+  display: <span class="sv">grid</span>;
+  grid-template-columns:
+    <span class="sv">1fr 1fr 1fr</span>;
+  gap: <span class="sv">8px</span>;
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><div class="grid-demo"><div>A</div><div>B</div><div>C</div><div>D</div><div>E</div><div>F</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic" id="responsive">
+        <div class="topic-head"><span class="topic-num">18</span><h2>Responsive design</h2></div>
+        <p>A <strong>media query</strong> applies CSS rules only when a condition — usually screen width — is met. This is how the same page adapts from desktop to phone.</p>
+        <div class="demo">
+          <div class="pane code-pane">
+            <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="filename">style.css</span></div>
+            <pre><code>.row {
+  display: <span class="sv">flex</span>;
+}
+
+<span class="cm">/* on narrow screens */</span>
+@media (max-width: <span class="sv">600px</span>) {
+  .row {
+    flex-direction: <span class="sv">column</span>;
+  }
+}</code></pre>
+          </div>
+          <div class="pane">
+            <div class="pane-bar browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="url-bar">output</span></div>
+            <div class="output-content"><p style="margin:0;">This very page uses that trick — try resizing your browser window and watch the left menu turn into a "☰ Course Menu" button.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="practice" id="practice">
+        <h2>Your turn: a mini profile card</h2>
+        <p>Open any text editor, save a file as <code>practice.html</code>, and build a small profile card using only what's on this page:</p>
+        <ol>
+          <li>Set up the basic document structure from topic 01.</li>
+          <li>Add an <code>&lt;img&gt;</code> of yourself, a pet, or anything you like.</li>
+          <li>Add an <code>&lt;h1&gt;</code> with a name, and a <code>&lt;p&gt;</code> with a short bio.</li>
+          <li>Wrap it all in a <code>&lt;div class="card"&gt;</code>.</li>
+          <li>Add a <code>&lt;style&gt;</code> block in the head that gives <code>.card</code> a background color, padding, and rounded corners.</li>
+          <li>Open the file by double-clicking it — it opens directly in your browser.</li>
+        </ol>
+        <p style="margin-bottom:0;">There's no submission needed — the goal is simply to type real code and see it render, which is the fastest way this material sticks.</p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<footer>Built with plain HTML &amp; CSS — view this page's own source for one more real-world example.</footer>
+
+<script>
+  // mobile sidebar toggle
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) {
+    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+  }
+
+  // scroll-spy: highlight current section in sidebar
+  const links = Array.from(document.querySelectorAll('.sidebar a'));
+  const sections = links.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+
+  function onScroll(){
+    let current = sections[0];
+    const scrollPos = window.scrollY + 120;
+    sections.forEach(sec => { if (sec.offsetTop <= scrollPos) current = sec; });
+    links.forEach(l => l.classList.remove('active'));
+    if (current) {
+      const activeLink = links.find(l => l.getAttribute('href') === '#' + current.id);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+</script>
+
+</body>
+</html>
